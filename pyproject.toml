@@ -22,6 +22,7 @@ dependencies = [
     "scipy>=1.12.0",
     "pandas>=2.2.0",
     "matplotlib>=3.8.0",
+    "pydantic>=2.6.0",
 ]
 
 [project.optional-dependencies]
@@ -76,8 +77,6 @@ select = [
     "SIM",    # flake8-simplify
 ]
 ignore = [
-    "ANN101",  # Missing type annotation for self in method
-    "ANN102",  # Missing type annotation for cls in classmethod
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
 ]
 
