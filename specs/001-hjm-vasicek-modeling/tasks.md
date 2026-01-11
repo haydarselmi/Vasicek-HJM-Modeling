@@ -19,13 +19,13 @@
 
 **Purpose**: Initialize Python project with constitution-compliant tooling
 
-- [ ] T001 Create project directory structure per plan.md in src/, tests/, notebooks/
-- [ ] T002 Initialize Python 3.14+ project with `uv init` and create pyproject.toml with all dependencies from research.md
-- [ ] T003 [P] Configure ruff linting in pyproject.toml (max-complexity=10, Google import style, select rules E/F/I/W/UP/ANN/B/C4/SIM)
-- [ ] T004 [P] Configure ty type checker settings in pyproject.toml
-- [ ] T005 [P] Configure pytest with pytest-cov, pytest-benchmark, hypothesis in pyproject.toml
-- [ ] T006 [P] Create .gitignore for Python project (venv, __pycache__, .pytest_cache, output/)
-- [ ] T007 Install dependencies with `uv sync` and verify installation
+- [X] T001 Create project directory structure per plan.md in src/, tests/, notebooks/
+- [X] T002 Initialize Python 3.14+ project with `uv init` and create pyproject.toml with all dependencies from research.md
+- [X] T003 [P] Configure ruff linting in pyproject.toml (max-complexity=10, Google import style, select rules E/F/I/W/UP/ANN/B/C4/SIM)
+- [X] T004 [P] Configure ty type checker settings in pyproject.toml
+- [X] T005 [P] Configure pytest with pytest-cov, pytest-benchmark, hypothesis in pyproject.toml
+- [X] T006 [P] Create .gitignore for Python project (venv, __pycache__, .pytest_cache, output/)
+- [X] T007 Install dependencies with `uv sync` and verify installation
 
 ---
 
