@@ -161,23 +161,23 @@
 
 ### Tests for User Story 4
 
-- [ ] T071 [P] [US4] Unit test for HJM model in tests/unit/test_hjm.py (test initialization from PCA, volatility calibration, drift computation)
-- [ ] T072 [P] [US4] Property-based test for HJM no-arbitrage in tests/unit/test_hjm.py (hypothesis: drift satisfies HJM condition)
-- [ ] T073 [US4] Integration test for HJM workflow in tests/integration/test_hjm_workflow.py (PCA → HJM setup → calibrate → simulate)
+- [X] T071 [P] [US4] Unit test for HJM model in tests/unit/test_hjm.py (test initialization from PCA, volatility calibration, drift computation)
+- [X] T072 [P] [US4] Property-based test for HJM no-arbitrage in tests/unit/test_hjm.py (hypothesis: drift satisfies HJM condition)
+- [X] T073 [US4] Integration test for HJM workflow in tests/integration/test_hjm_workflow.py (PCA → HJM setup → calibrate → simulate)
 
 ### Implementation for User Story 4
 
-- [ ] T074 [US4] Implement HJMModel class in src/models/hjm.py with initialization from PCAResult
-- [ ] T075 [US4] Implement calibrate() method in HJMModel (estimate volatility functions from PCA loadings and eigenvalues)
-- [ ] T076 [US4] Implement compute_drift() method in HJMModel (no-arbitrage drift condition)
-- [ ] T077 [US4] Implement apply_hjm_dynamics() function in src/simulation/monte_carlo.py (vectorized Euler-Maruyama for forward curves)
-- [ ] T078 [US4] Implement simulate() method in HJMModel class for forward rate curve simulation
-- [ ] T079 [P] [US4] Implement FactorContribution dataclass in src/models/hjm.py with fields: factor_index, factor_label, contribution, percentage
-- [ ] T080 [US4] Implement get_factor_contributions() method in HJMModel for decomposing simulated movements
-- [ ] T081 [P] [US4] Implement plot_volatility_functions() function in src/visualization/simulation_plots.py (volatility by factor × maturity)
-- [ ] T082 [P] [US4] Implement plot_forward_curve_evolution() function in src/visualization/simulation_plots.py (3D or animated)
-- [ ] T083 [US4] Add logging to HJM calibration and simulation in src/models/hjm.py
-- [ ] T084 [US4] Create notebook notebooks/04_hjm_model.ipynb demonstrating HJM from PCA, simulation, factor contributions
+- [X] T074 [US4] Implement HJMModel class in src/models/hjm.py with initialization from PCAResult
+- [X] T075 [US4] Implement calibrate() method in HJMModel (estimate volatility functions from PCA loadings and eigenvalues)
+- [X] T076 [US4] Implement compute_drift() method in HJMModel (no-arbitrage drift condition)
+- [X] T077 [US4] Implement apply_hjm_dynamics() function in src/simulation/monte_carlo.py (vectorized Euler-Maruyama for forward curves)
+- [X] T078 [US4] Implement simulate() method in HJMModel class for forward rate curve simulation
+- [X] T079 [P] [US4] Implement FactorContribution dataclass in src/models/hjm.py with fields: factor_index, factor_label, contribution, percentage
+- [X] T080 [US4] Implement get_factor_contributions() method in HJMModel for decomposing simulated movements
+- [X] T081 [P] [US4] Implement plot_volatility_functions() function in src/visualization/simulation_plots.py (volatility by factor × maturity)
+- [X] T082 [P] [US4] Implement plot_forward_curve_evolution() function in src/visualization/simulation_plots.py (3D or animated)
+- [X] T083 [US4] Add logging to HJM calibration and simulation in src/models/hjm.py
+- [X] T084 [US4] Create notebook notebooks/04_hjm_model.ipynb demonstrating HJM from PCA, simulation, factor contributions
 
 **Checkpoint**: User Story 4 complete - researchers can build and simulate HJM models
 

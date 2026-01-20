@@ -7,9 +7,12 @@ This module provides functionality for:
 """
 
 from src.models.base import InterestRateModel
+from src.models.hjm import FactorContribution, HJMModel
 from src.models.vasicek import VasicekModel
 
 __all__ = [
+    "FactorContribution",
+    "HJMModel",
     "InterestRateModel",
     "VasicekModel",
 ]

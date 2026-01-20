@@ -4,11 +4,16 @@ This module provides functions for plotting Monte Carlo simulation
 paths, summary statistics, and terminal rate distributions.
 """
 
+from typing import TYPE_CHECKING
+
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 
 from src.simulation.paths import SimulationResult
+
+if TYPE_CHECKING:
+    from src.models.hjm import HJMModel
 
 
 def plot_simulation_paths(
@@ -281,10 +286,323 @@ def _compute_skewness(data: npt.NDArray[np.float64]) -> float:
 
 def _compute_kurtosis(data: npt.NDArray[np.float64]) -> float:
     """Compute excess kurtosis of data."""
-    n = len(data)
     mean = np.mean(data)
     std = np.std(data, ddof=1)
     if std < 1e-10:
         return 0.0
     m4 = np.mean((data - mean) ** 4)
     return (m4 / (std**4)) - 3
+
+
+# =============================================================================
+# HJM-Specific Visualization Functions
+# =============================================================================
+
+
+def plot_volatility_functions(
+    model: "HJMModel",
+    ax: plt.Axes | None = None,
+    title: str | None = None,
+) -> plt.Figure:
+    """Plot HJM volatility functions by factor and maturity.
+
+    Creates a visualization showing how each factor's volatility varies
+    across maturities, revealing the level/slope/curvature patterns.
+
+    Args:
+        model: Calibrated HJMModel instance.
+        ax: Optional matplotlib axes to plot on.
+        title: Optional plot title.
+
+    Returns:
+        Matplotlib Figure containing the volatility plot.
+
+    Raises:
+        ModelNotCalibratedError: If model is not calibrated.
+
+    Example:
+        >>> model = HJMModel(pca_result=pca_result)
+        >>> model.calibrate()
+        >>> fig = plot_volatility_functions(model)
+        >>> fig.savefig("hjm_volatility.png")
+    """
+    if not model.is_calibrated:
+        from src.utils.exceptions import ModelNotCalibratedError
+
+        raise ModelNotCalibratedError(model_type="HJM")
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(10, 6))
+    else:
+        fig = ax.figure
+
+    maturities = model.maturities
+    volatility_functions = model.volatility_functions
+    n_factors = model.n_factors
+
+    # Color palette for factors
+    cmap = plt.colormaps["viridis"]
+    colors = cmap(np.linspace(0.2, 0.8, n_factors))
+
+    for i in range(n_factors):
+        # Get factor label
+        if i < len(model.pca_result.interpretations):
+            label = model.pca_result.interpretations[i]
+        else:
+            label = f"Factor {i + 1}"
+
+        # Add variance explained to label
+        var_pct = model.pca_result.explained_variance_ratio[i] * 100
+        label = f"{label} ({var_pct:.1f}%)"
+
+        ax.plot(
+            maturities,
+            volatility_functions[i] * 100,  # Convert to percentage
+            marker="o",
+            markersize=6,
+            linewidth=2,
+            color=colors[i],
+            label=label,
+        )
+
+    # Add zero line for reference
+    ax.axhline(y=0, color="gray", linestyle="--", alpha=0.5)
+
+    # Formatting
+    ax.set_xlabel("Maturity (years)")
+    ax.set_ylabel("Volatility (% per √day)")
+    
+    if title is None:
+        title = f"HJM Volatility Functions ({n_factors} Factors)"
+    ax.set_title(title)
+
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+    return fig
+
+
+def plot_forward_curve_evolution(
+    result: SimulationResult,
+    n_curves: int = 10,
+    time_indices: list[int] | None = None,
+    path_index: int = 0,
+    ax: plt.Axes | None = None,
+    title: str | None = None,
+    colormap: str = "viridis",
+) -> plt.Figure:
+    """Plot the evolution of forward curves over time.
+
+    Shows how the forward rate curve changes through the simulation,
+    with curves at different time points shown in different colors.
+
+    Args:
+        result: SimulationResult from HJM simulation.
+        n_curves: Number of curves to display (evenly spaced in time).
+        time_indices: Specific time indices to plot. If None, evenly space n_curves.
+        path_index: Which path to visualize (default: first path).
+        ax: Optional matplotlib axes to plot on.
+        title: Optional plot title.
+        colormap: Matplotlib colormap name for time coloring.
+
+    Returns:
+        Matplotlib Figure containing the forward curve evolution plot.
+
+    Example:
+        >>> result = hjm_model.simulate(n_paths=100, time_horizon=1.0, time_step=1/252)
+        >>> fig = plot_forward_curve_evolution(result, n_curves=10)
+        >>> fig.savefig("forward_curve_evolution.png")
+    """
+    if result.model_type != "hjm":
+        raise ValueError(f"Expected HJM simulation result, got {result.model_type}")
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(12, 6))
+    else:
+        fig = ax.figure
+
+    # Get the path to visualize
+    path = result.paths[path_index]
+    rates = path.rates  # Shape: (n_time_points, n_maturities)
+    time_grid = path.time_grid
+
+    n_time_points = len(time_grid)
+
+    # Determine which time indices to plot
+    if time_indices is None:
+        time_indices = np.linspace(0, n_time_points - 1, n_curves, dtype=int).tolist()
+
+    # We need maturities - extract from first curve or use indices
+    # For HJM, we typically have maturities stored somewhere
+    # Use array indices as proxy if not available
+    n_maturities = rates.shape[1]
+    maturities: npt.NDArray[np.float64] = np.arange(
+        n_maturities, dtype=np.float64
+    )
+
+    # Try to get actual maturities from model parameters
+    if "n_factors" in result.model_parameters:
+        # This is an HJM result, but we don't have maturities directly
+        # Use standard treasury maturities as approximation
+        if n_maturities == 7:
+            maturities = np.array(
+                [0.25, 0.5, 1.0, 2.0, 5.0, 10.0, 30.0], dtype=np.float64
+            )
+        else:
+            maturities = np.linspace(0.25, 30, n_maturities)
+
+    # Color mapping based on time
+    cmap = plt.colormaps[colormap]
+    colors = [cmap(t / (n_time_points - 1)) for t in time_indices]
+
+    # Plot curves at selected times
+    for idx, t_idx in enumerate(time_indices):
+        curve = rates[t_idx]
+        time_label = time_grid[t_idx]
+
+        ax.plot(
+            maturities,
+            curve * 100,  # Convert to percentage
+            color=colors[idx],
+            linewidth=2,
+            alpha=0.8,
+            label=f"t = {time_label:.2f}y",
+        )
+
+    # Highlight initial and terminal curves
+    ax.plot(
+        maturities,
+        rates[0] * 100,
+        color="blue",
+        linewidth=3,
+        linestyle="--",
+        label="Initial (t=0)",
+    )
+    ax.plot(
+        maturities,
+        rates[-1] * 100,
+        color="red",
+        linewidth=3,
+        linestyle="--",
+        label=f"Terminal (t={time_grid[-1]:.1f}y)",
+    )
+
+    # Formatting
+    ax.set_xlabel("Maturity (years)")
+    ax.set_ylabel("Forward Rate (%)")
+
+    if title is None:
+        title = f"Forward Curve Evolution (Path {path_index + 1})"
+    ax.set_title(title)
+
+    ax.legend(loc="best", fontsize=8)
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+    return fig
+
+
+def plot_hjm_terminal_surfaces(
+    result: SimulationResult,
+    percentiles: list[float] | None = None,
+    ax: plt.Axes | None = None,
+    title: str | None = None,
+) -> plt.Figure:
+    """Plot percentile surfaces of terminal forward curves.
+
+    Shows the distribution of terminal forward curves across all
+    simulation paths, visualized as percentile bands.
+
+    Args:
+        result: SimulationResult from HJM simulation.
+        percentiles: Percentiles to plot. Defaults to [5, 25, 50, 75, 95].
+        ax: Optional matplotlib axes to plot on.
+        title: Optional plot title.
+
+    Returns:
+        Matplotlib Figure containing the terminal surface plot.
+    """
+    if result.model_type != "hjm":
+        raise ValueError(f"Expected HJM simulation result, got {result.model_type}")
+
+    if percentiles is None:
+        percentiles = [5.0, 25.0, 50.0, 75.0, 95.0]
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(10, 6))
+    else:
+        fig = ax.figure
+
+    # Get terminal curves from all paths
+    terminal_curves = result.terminal_distribution()  # (n_paths, n_maturities)
+    n_maturities = terminal_curves.shape[1]
+
+    # Use standard maturities or indices
+    if n_maturities == 7:
+        maturities = np.array([0.25, 0.5, 1.0, 2.0, 5.0, 10.0, 30.0])
+    else:
+        maturities = np.linspace(0.25, 30, n_maturities)
+
+    # Compute percentiles
+    pct_curves = {
+        p: np.percentile(terminal_curves, p, axis=0) * 100
+        for p in percentiles
+    }
+
+    # Plot median
+    if 50.0 in pct_curves:
+        ax.plot(
+            maturities,
+            pct_curves[50.0],
+            color="darkblue",
+            linewidth=2,
+            label="Median",
+        )
+
+    # Plot bands
+    if 5.0 in pct_curves and 95.0 in pct_curves:
+        ax.fill_between(
+            maturities,
+            pct_curves[5.0],
+            pct_curves[95.0],
+            alpha=0.2,
+            color="blue",
+            label="5th-95th percentile",
+        )
+
+    if 25.0 in pct_curves and 75.0 in pct_curves:
+        ax.fill_between(
+            maturities,
+            pct_curves[25.0],
+            pct_curves[75.0],
+            alpha=0.3,
+            color="blue",
+            label="25th-75th percentile",
+        )
+
+    # Plot initial curve for comparison
+    initial_curve = result.paths[0].rates[0] * 100
+    ax.plot(
+        maturities,
+        initial_curve,
+        color="red",
+        linewidth=2,
+        linestyle="--",
+        label="Initial Curve",
+    )
+
+    # Formatting
+    ax.set_xlabel("Maturity (years)")
+    ax.set_ylabel("Forward Rate (%)")
+
+    if title is None:
+        horizon = result.time_horizon
+        title = f"Terminal Forward Curve Distribution (T = {horizon:.1f}y)"
+    ax.set_title(title)
+
+    ax.legend(loc="best")
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+    return fig
