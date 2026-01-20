@@ -6,6 +6,14 @@ This module provides functionality for:
 - Interpretation of PCA components (level, slope, curvature)
 """
 
+from src.analysis.pca import (
+    PCAResult,
+    YieldCurveChange,
+    compute_pca,
+    compute_yield_curve_changes,
+    interpret_components,
+    reconstruct_curve,
+)
 from src.analysis.statistics import (
     SummaryStatistics,
     compute_correlation_matrix,
@@ -13,8 +21,16 @@ from src.analysis.statistics import (
 )
 
 __all__ = [
+    # Statistics
     "SummaryStatistics",
     "compute_summary_statistics",
     "compute_correlation_matrix",
+    # PCA
+    "PCAResult",
+    "YieldCurveChange",
+    "compute_pca",
+    "compute_yield_curve_changes",
+    "interpret_components",
+    "reconstruct_curve",
 ]
 

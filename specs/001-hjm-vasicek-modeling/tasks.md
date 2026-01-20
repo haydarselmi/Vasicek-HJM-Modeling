@@ -130,22 +130,22 @@
 
 ### Tests for User Story 3
 
-- [ ] T058 [P] [US3] Unit test for PCA computation in tests/unit/test_pca.py (test eigenvalue ordering, orthogonality, explained variance sum)
-- [ ] T059 [P] [US3] Property-based test for PCA in tests/unit/test_pca.py (hypothesis: loadings orthonormal, variance ratios sum ≤1)
-- [ ] T060 [US3] Integration test for PCA workflow in tests/integration/test_pca_workflow.py (load data → compute changes → PCA → interpret → visualize)
+- [X] T058 [P] [US3] Unit test for PCA computation in tests/unit/test_pca.py (test eigenvalue ordering, orthogonality, explained variance sum)
+- [X] T059 [P] [US3] Property-based test for PCA in tests/unit/test_pca.py (hypothesis: loadings orthonormal, variance ratios sum ≤1)
+- [X] T060 [US3] Integration test for PCA workflow in tests/integration/test_pca_workflow.py (load data → compute changes → PCA → interpret → visualize)
 
 ### Implementation for User Story 3
 
-- [ ] T061 [US3] Implement YieldCurveChange dataclass in src/analysis/pca.py with fields: from_date, to_date, maturities, changes
-- [ ] T062 [US3] Implement PCAResult dataclass in src/analysis/pca.py with fields: n_components, explained_variance_ratio, cumulative_variance, loadings, maturities, interpretations, eigenvalues, analysis_date
-- [ ] T063 [US3] Implement compute_yield_curve_changes() helper function in src/analysis/pca.py (first differences of rate matrix)
-- [ ] T064 [US3] Implement compute_pca() function in src/analysis/pca.py using numpy.linalg.eigh on covariance matrix
-- [ ] T065 [US3] Implement interpret_components() function in src/analysis/pca.py with pattern-based rules (level: flat loadings, slope: tilt, curvature: bow)
-- [ ] T066 [US3] Implement reconstruct_curve() function in src/analysis/pca.py for reduced-component reconstruction
-- [ ] T067 [P] [US3] Implement plot_explained_variance() function in src/visualization/pca_plots.py (bar + cumulative line)
-- [ ] T068 [P] [US3] Implement plot_component_loadings() function in src/visualization/pca_plots.py (loadings across maturities for first 3 PCs)
-- [ ] T069 [US3] Add logging to PCA analysis in src/analysis/pca.py
-- [ ] T070 [US3] Create notebook notebooks/03_pca_analysis.ipynb demonstrating PCA, interpretation, variance plots, loadings visualization
+- [X] T061 [US3] Implement YieldCurveChange dataclass in src/analysis/pca.py with fields: from_date, to_date, maturities, changes
+- [X] T062 [US3] Implement PCAResult dataclass in src/analysis/pca.py with fields: n_components, explained_variance_ratio, cumulative_variance, loadings, maturities, interpretations, eigenvalues, analysis_date
+- [X] T063 [US3] Implement compute_yield_curve_changes() helper function in src/analysis/pca.py (first differences of rate matrix)
+- [X] T064 [US3] Implement compute_pca() function in src/analysis/pca.py using numpy.linalg.eigh on covariance matrix
+- [X] T065 [US3] Implement interpret_components() function in src/analysis/pca.py with pattern-based rules (level: flat loadings, slope: tilt, curvature: bow)
+- [X] T066 [US3] Implement reconstruct_curve() function in src/analysis/pca.py for reduced-component reconstruction
+- [X] T067 [P] [US3] Implement plot_explained_variance() function in src/visualization/pca_plots.py (bar + cumulative line)
+- [X] T068 [P] [US3] Implement plot_component_loadings() function in src/visualization/pca_plots.py (loadings across maturities for first 3 PCs)
+- [X] T069 [US3] Add logging to PCA analysis in src/analysis/pca.py
+- [X] T070 [US3] Create notebook notebooks/03_pca_analysis.ipynb demonstrating PCA, interpretation, variance plots, loadings visualization
 
 **Checkpoint**: User Story 3 complete - analysts can run PCA and interpret components
 
