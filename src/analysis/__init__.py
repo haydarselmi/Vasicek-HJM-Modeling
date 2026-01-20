@@ -32,5 +32,29 @@ __all__ = [
     "compute_yield_curve_changes",
     "interpret_components",
     "reconstruct_curve",
+    # Autoencoder (optional - requires torch)
+    "AutoencoderResult",
+    "ComparisonResult",
+    "YieldCurveAutoencoder",
+    "train_autoencoder",
+    "compare_dimensionality_methods",
+    "get_latent_encodings",
 ]
+
+
+# Conditional imports for autoencoder module (requires torch)
+def __getattr__(name: str) -> object:
+    """Lazy import for autoencoder module components."""
+    if name in (
+        "AutoencoderResult",
+        "ComparisonResult",
+        "YieldCurveAutoencoder",
+        "train_autoencoder",
+        "compare_dimensionality_methods",
+        "get_latent_encodings",
+    ):
+        from src.analysis import autoencoder
+
+        return getattr(autoencoder, name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 

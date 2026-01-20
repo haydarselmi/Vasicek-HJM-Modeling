@@ -289,3 +289,279 @@ def plot_pca_summary(
 
     plt.tight_layout()
     return fig
+
+
+def plot_training_loss(
+    history: dict[str, list[float]],
+    title: str = "Autoencoder Training Loss",
+    ax: plt.Axes | None = None,
+) -> plt.Figure:
+    """Plot training and validation loss curves for autoencoder.
+
+    Creates a line plot showing loss evolution over training epochs,
+    with optional validation loss overlay.
+
+    Args:
+        history: Training history dictionary with 'train_loss' and
+                 optionally 'val_loss' keys.
+        title: Plot title.
+        ax: Optional matplotlib axes. If None, creates new figure.
+
+    Returns:
+        Matplotlib figure with loss curves.
+    """
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(10, 6))
+    else:
+        fig = ax.get_figure()
+
+    epochs = range(1, len(history["train_loss"]) + 1)
+
+    # Plot training loss
+    ax.plot(
+        epochs,
+        history["train_loss"],
+        color="steelblue",
+        linewidth=2,
+        marker="o",
+        markersize=4,
+        markevery=max(1, len(epochs) // 20),
+        label="Training Loss",
+    )
+
+    # Plot validation loss if available
+    if "val_loss" in history and len(history["val_loss"]) > 0:
+        ax.plot(
+            epochs,
+            history["val_loss"],
+            color="crimson",
+            linewidth=2,
+            marker="s",
+            markersize=4,
+            markevery=max(1, len(epochs) // 20),
+            label="Validation Loss",
+        )
+
+    # Find minimum loss point
+    min_train_loss = min(history["train_loss"])
+    min_epoch = history["train_loss"].index(min_train_loss) + 1
+    ax.axvline(
+        x=min_epoch,
+        color="gray",
+        linestyle="--",
+        alpha=0.5,
+        label=f"Min train loss (epoch {min_epoch})",
+    )
+
+    # Styling
+    ax.set_xlabel("Epoch", fontsize=12)
+    ax.set_ylabel("Loss (MSE)", fontsize=12)
+    ax.set_title(title, fontsize=14, fontweight="bold")
+
+    ax.legend(loc="upper right", fontsize=10)
+    ax.grid(True, alpha=0.3)
+
+    # Log scale for y-axis if range is large
+    loss_range = max(history["train_loss"]) / (min(history["train_loss"]) + 1e-10)
+    if loss_range > 100:
+        ax.set_yscale("log")
+
+    plt.tight_layout()
+    return fig
+
+
+def plot_latent_space(
+    encodings: np.ndarray,
+    labels: np.ndarray | list[str] | None = None,
+    dims: tuple[int, int] | tuple[int, int, int] = (0, 1),
+    title: str = "Latent Space Representation",
+    ax: plt.Axes | None = None,
+    colorbar_label: str = "Value",
+) -> plt.Figure:
+    """Plot latent space encodings in 2D or 3D.
+
+    Creates a scatter plot of autoencoder latent representations,
+    optionally colored by labels or continuous values.
+
+    Args:
+        encodings: Latent encodings of shape (n_samples, latent_dim).
+        labels: Optional labels for coloring points. Can be categorical
+                (list of strings) or numerical (array of floats).
+        dims: Tuple of dimension indices to plot. Use 2 for 2D, 3 for 3D.
+        title: Plot title.
+        ax: Optional matplotlib axes. If None, creates new figure.
+        colorbar_label: Label for colorbar if using numerical labels.
+
+    Returns:
+        Matplotlib figure with latent space visualization.
+    """
+    is_3d = len(dims) == 3
+    latent_dim = encodings.shape[1]
+
+    # Validate dimensions
+    for d in dims:
+        if d >= latent_dim:
+            raise ValueError(
+                f"Dimension {d} exceeds latent space size {latent_dim}"
+            )
+
+    # Create figure
+    if ax is None:
+        if is_3d:
+            from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
+
+            fig = plt.figure(figsize=(10, 8))
+            ax = fig.add_subplot(111, projection="3d")
+        else:
+            fig, ax = plt.subplots(figsize=(10, 8))
+    else:
+        fig = ax.get_figure()
+
+    # Prepare colors
+    if labels is None:
+        colors = "steelblue"
+        scatter_kwargs = {"c": colors, "alpha": 0.6, "s": 50}
+    elif isinstance(labels, list) and all(isinstance(lbl, str) for lbl in labels):
+        # Categorical labels
+        unique_labels = list(set(labels))
+        color_map = {label: i for i, label in enumerate(unique_labels)}
+        colors = [color_map[lbl] for lbl in labels]
+        scatter_kwargs = {"c": colors, "cmap": "tab10", "alpha": 0.6, "s": 50}
+    else:
+        # Numerical labels
+        colors = np.asarray(labels)
+        scatter_kwargs = {"c": colors, "cmap": "viridis", "alpha": 0.6, "s": 50}
+
+    # Create scatter plot
+    if is_3d:
+        scatter = ax.scatter(
+            encodings[:, dims[0]],
+            encodings[:, dims[1]],
+            encodings[:, dims[2]],
+            **scatter_kwargs,
+        )
+        ax.set_xlabel(f"Latent Dim {dims[0] + 1}", fontsize=11)
+        ax.set_ylabel(f"Latent Dim {dims[1] + 1}", fontsize=11)
+        ax.set_zlabel(f"Latent Dim {dims[2] + 1}", fontsize=11)
+    else:
+        scatter = ax.scatter(
+            encodings[:, dims[0]],
+            encodings[:, dims[1]],
+            **scatter_kwargs,
+        )
+        ax.set_xlabel(f"Latent Dim {dims[0] + 1}", fontsize=12)
+        ax.set_ylabel(f"Latent Dim {dims[1] + 1}", fontsize=12)
+
+    # Add colorbar for numerical labels
+    if labels is not None and not (
+        isinstance(labels, list) and all(isinstance(lbl, str) for lbl in labels)
+    ):
+        cbar = plt.colorbar(scatter, ax=ax, shrink=0.8)
+        cbar.set_label(colorbar_label, fontsize=11)
+
+    # Title and grid
+    ax.set_title(title, fontsize=14, fontweight="bold")
+    if not is_3d:
+        ax.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    return fig
+
+
+def plot_reconstruction_comparison(
+    original: np.ndarray,
+    pca_reconstructed: np.ndarray,
+    autoencoder_reconstructed: np.ndarray,
+    maturities: np.ndarray,
+    sample_indices: list[int] | None = None,
+    n_samples: int = 5,
+) -> plt.Figure:
+    """Plot original vs reconstructed curves for PCA and autoencoder.
+
+    Creates a multi-panel figure comparing reconstruction quality
+    of PCA and autoencoder on selected samples.
+
+    Args:
+        original: Original data of shape (n_samples, n_maturities).
+        pca_reconstructed: PCA reconstructed data.
+        autoencoder_reconstructed: Autoencoder reconstructed data.
+        maturities: Maturity values for x-axis.
+        sample_indices: Specific sample indices to plot. If None,
+                       selects evenly spaced samples.
+        n_samples: Number of samples to plot (if sample_indices is None).
+
+    Returns:
+        Matplotlib figure with reconstruction comparison.
+    """
+    n_total = original.shape[0]
+
+    if sample_indices is None:
+        # Select evenly spaced samples
+        sample_indices = list(np.linspace(0, n_total - 1, n_samples, dtype=int))
+
+    n_plots = len(sample_indices)
+    fig, axes = plt.subplots(
+        1,
+        n_plots,
+        figsize=(4 * n_plots, 4),
+        sharey=True,
+    )
+
+    if n_plots == 1:
+        axes = [axes]
+
+    for ax, idx in zip(axes, sample_indices, strict=True):
+        # Plot original
+        ax.plot(
+            maturities,
+            original[idx],
+            "k-",
+            linewidth=2,
+            marker="o",
+            markersize=6,
+            label="Original",
+        )
+
+        # Plot PCA reconstruction
+        ax.plot(
+            maturities,
+            pca_reconstructed[idx],
+            "b--",
+            linewidth=1.5,
+            marker="s",
+            markersize=5,
+            alpha=0.8,
+            label="PCA",
+        )
+
+        # Plot autoencoder reconstruction
+        ax.plot(
+            maturities,
+            autoencoder_reconstructed[idx],
+            "r:",
+            linewidth=1.5,
+            marker="^",
+            markersize=5,
+            alpha=0.8,
+            label="Autoencoder",
+        )
+
+        # Calculate errors
+        pca_mse = np.mean((original[idx] - pca_reconstructed[idx]) ** 2)
+        ae_mse = np.mean((original[idx] - autoencoder_reconstructed[idx]) ** 2)
+
+        ax.set_title(f"Sample {idx}\nPCA MSE: {pca_mse:.2e}, AE MSE: {ae_mse:.2e}", fontsize=10)
+        ax.set_xlabel("Maturity (Years)", fontsize=10)
+        ax.grid(True, alpha=0.3)
+
+    axes[0].set_ylabel("Rate Change", fontsize=11)
+    axes[0].legend(loc="best", fontsize=9)
+
+    fig.suptitle(
+        "Reconstruction Comparison: Original vs PCA vs Autoencoder",
+        fontsize=13,
+        fontweight="bold",
+    )
+
+    plt.tight_layout()
+    return fig

@@ -234,17 +234,17 @@
 
 ### Tests for User Story 6 (Optional)
 
-- [ ] T101 [P] [US6] Unit test for autoencoder in tests/unit/test_autoencoder.py (test encoder/decoder shapes, loss computation)
+- [X] T101 [P] [US6] Unit test for autoencoder in tests/unit/test_autoencoder.py (test encoder/decoder shapes, loss computation)
 
 ### Implementation for User Story 6 (Optional)
 
-- [ ] T102 [P] [US6] Create src/analysis/autoencoder.py module
-- [ ] T103 [US6] Implement YieldCurveAutoencoder class in src/analysis/autoencoder.py (PyTorch feedforward: N→64→32→K→32→64→N)
-- [ ] T104 [US6] Implement train_autoencoder() function in src/analysis/autoencoder.py (MSE loss, Adam optimizer, batch training)
-- [ ] T105 [US6] Implement compare_dimensionality_methods() function in src/analysis/autoencoder.py (PCA vs autoencoder reconstruction)
-- [ ] T106 [P] [US6] Implement plot_training_loss() function in src/visualization/pca_plots.py
-- [ ] T107 [P] [US6] Implement plot_latent_space() function in src/visualization/pca_plots.py (2D/3D scatter of encodings)
-- [ ] T108 [US6] Create notebook notebooks/06_optional_autoencoder.ipynb demonstrating autoencoder training and comparison to PCA
+- [X] T102 [P] [US6] Create src/analysis/autoencoder.py module
+- [X] T103 [US6] Implement YieldCurveAutoencoder class in src/analysis/autoencoder.py (PyTorch feedforward: N→64→32→K→32→64→N)
+- [X] T104 [US6] Implement train_autoencoder() function in src/analysis/autoencoder.py (MSE loss, Adam optimizer, batch training)
+- [X] T105 [US6] Implement compare_dimensionality_methods() function in src/analysis/autoencoder.py (PCA vs autoencoder reconstruction)
+- [X] T106 [P] [US6] Implement plot_training_loss() function in src/visualization/pca_plots.py
+- [X] T107 [P] [US6] Implement plot_latent_space() function in src/visualization/pca_plots.py (2D/3D scatter of encodings)
+- [X] T108 [US6] Create notebook notebooks/06_optional_autoencoder.ipynb demonstrating autoencoder training and comparison to PCA
 
 **Checkpoint**: User Story 6 complete (optional) - autoencoder exploration available
 
