@@ -116,6 +116,69 @@ class InterestRateDataset:
 
         return [self.get_yield_curve(d) for d in dates]
 
+    def filter_dates(
+        self,
+        start_date: date | None = None,
+        end_date: date | None = None,
+    ) -> "InterestRateDataset":
+        """Filter the dataset to a date range for train/test splitting.
+
+        Creates a new dataset containing only observations within the
+        specified date range. Useful for creating training and validation
+        splits for model backtesting.
+
+        Args:
+            start_date: Start date (inclusive). If None, uses first date.
+            end_date: End date (inclusive). If None, uses last date.
+
+        Returns:
+            New InterestRateDataset with filtered data.
+
+        Raises:
+            ValueError: If date range results in empty dataset.
+
+        Example:
+            >>> # Split into train (first 80%) and test (last 20%)
+            >>> n_obs = len(dataset.observation_dates)
+            >>> split_idx = int(n_obs * 0.8)
+            >>> split_date = dataset.observation_dates[split_idx]
+            >>> train_data = dataset.filter_dates(end_date=split_date)
+            >>> test_data = dataset.filter_dates(start_date=split_date)
+        """
+        if start_date is None:
+            start_date = self.observation_dates[0]
+        if end_date is None:
+            end_date = self.observation_dates[-1]
+
+        # Find indices for the date range
+        indices = [
+            i for i, d in enumerate(self.observation_dates)
+            if start_date <= d <= end_date
+        ]
+
+        if len(indices) == 0:
+            msg = f"No observations found in date range {start_date} to {end_date}"
+            raise ValueError(msg)
+
+        # Filter dates and rates
+        filtered_dates = [self.observation_dates[i] for i in indices]
+        filtered_rates = self.rates[indices, :]
+
+        logger.info(
+            "Filtered dataset from %s to %s: %d observations",
+            start_date,
+            end_date,
+            len(filtered_dates),
+        )
+
+        return InterestRateDataset(
+            file_path=self.file_path,
+            source_name=f"{self.source_name}_filtered",
+            observation_dates=filtered_dates,
+            maturities=self.maturities.copy(),
+            rates=filtered_rates,
+        )
+
 
 def _parse_maturity(maturity_str: str) -> float:
     """Parse a maturity string into years.

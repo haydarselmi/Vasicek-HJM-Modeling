@@ -193,21 +193,21 @@
 
 ### Tests for User Story 5
 
-- [ ] T085 [P] [US5] Unit test for backtesting in tests/unit/test_backtesting.py (test error metric calculations: MAE, RMSE, MAPE, hit ratio)
-- [ ] T086 [US5] Integration test for model comparison in tests/integration/test_comparison_workflow.py (train both → backtest → compare → recommend)
+- [X] T085 [P] [US5] Unit test for backtesting in tests/unit/test_backtesting.py (test error metric calculations: MAE, RMSE, MAPE, hit ratio)
+- [X] T086 [US5] Integration test for model comparison in tests/integration/test_comparison_workflow.py (train both → backtest → compare → recommend)
 
 ### Implementation for User Story 5
 
-- [ ] T087 [US5] Implement ValidationResult dataclass in src/validation/backtesting.py with fields: model_type, validation_period, mae, rmse, mape, hit_ratio, predicted_values, actual_values, validation_date
-- [ ] T088 [US5] Implement backtest_model() function in src/validation/backtesting.py (rolling predictions vs actuals)
-- [ ] T089 [P] [US5] Implement ComparisonResult dataclass in src/validation/comparison.py with fields: models, validation_results, recommendations
-- [ ] T090 [US5] Implement compare_models() function in src/validation/comparison.py (side-by-side metrics)
-- [ ] T091 [US5] Implement get_model_recommendation() function in src/validation/comparison.py (use case based guidance)
-- [ ] T092 [P] [US5] Implement plot_model_comparison() function in src/visualization/simulation_plots.py (side-by-side outputs)
-- [ ] T093 [P] [US5] Implement plot_backtest_results() function in src/visualization/simulation_plots.py (predictions vs actuals with error bands)
-- [ ] T094 [US5] Add filter_dates() method to InterestRateDataset in src/data/loader.py for train/test splitting
-- [ ] T095 [US5] Add logging to validation and comparison operations in src/validation/
-- [ ] T096 [US5] Create notebook notebooks/05_model_comparison.ipynb demonstrating model comparison and backtesting
+- [X] T087 [US5] Implement ValidationResult dataclass in src/validation/backtesting.py with fields: model_type, validation_period, mae, rmse, mape, hit_ratio, predicted_values, actual_values, validation_date
+- [X] T088 [US5] Implement backtest_model() function in src/validation/backtesting.py (rolling predictions vs actuals)
+- [X] T089 [P] [US5] Implement ComparisonResult dataclass in src/validation/comparison.py with fields: models, validation_results, recommendations
+- [X] T090 [US5] Implement compare_models() function in src/validation/comparison.py (side-by-side metrics)
+- [X] T091 [US5] Implement get_model_recommendation() function in src/validation/comparison.py (use case based guidance)
+- [X] T092 [P] [US5] Implement plot_model_comparison() function in src/visualization/simulation_plots.py (side-by-side outputs)
+- [X] T093 [P] [US5] Implement plot_backtest_results() function in src/visualization/simulation_plots.py (predictions vs actuals with error bands)
+- [X] T094 [US5] Add filter_dates() method to InterestRateDataset in src/data/loader.py for train/test splitting
+- [X] T095 [US5] Add logging to validation and comparison operations in src/validation/
+- [X] T096 [US5] Create notebook notebooks/05_model_comparison.ipynb demonstrating model comparison and backtesting
 
 **Checkpoint**: User Story 5 complete - risk managers can compare and validate models
 
