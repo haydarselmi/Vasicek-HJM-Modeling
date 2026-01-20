@@ -6,5 +6,11 @@ This module provides functionality for:
 - HJM multifactor model with PCA integration
 """
 
-__all__: list[str] = []
+from src.models.base import InterestRateModel
+from src.models.vasicek import VasicekModel
+
+__all__ = [
+    "InterestRateModel",
+    "VasicekModel",
+]
 

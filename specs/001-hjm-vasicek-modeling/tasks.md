@@ -96,27 +96,27 @@
 
 ### Tests for User Story 2
 
-- [ ] T040 [P] [US2] Unit test for Vasicek calibration in tests/unit/test_vasicek.py (test MLE convergence, parameter bounds, OLS fallback)
-- [ ] T041 [P] [US2] Unit test for Monte Carlo engine in tests/unit/test_monte_carlo.py (test shock generation, vectorization, reproducibility with seed)
-- [ ] T042 [P] [US2] Property-based test for Vasicek mean reversion in tests/unit/test_vasicek.py (hypothesis: long-run mean approaches theta)
-- [ ] T043 [US2] Integration test for Vasicek workflow in tests/integration/test_vasicek_workflow.py (load data → calibrate → simulate → visualize)
+- [X] T040 [P] [US2] Unit test for Vasicek calibration in tests/unit/test_vasicek.py (test MLE convergence, parameter bounds, OLS fallback)
+- [X] T041 [P] [US2] Unit test for Monte Carlo engine in tests/unit/test_monte_carlo.py (test shock generation, vectorization, reproducibility with seed)
+- [X] T042 [P] [US2] Property-based test for Vasicek mean reversion in tests/unit/test_vasicek.py (hypothesis: long-run mean approaches theta)
+- [X] T043 [US2] Integration test for Vasicek workflow in tests/integration/test_vasicek_workflow.py (load data → calibrate → simulate → visualize)
 
 ### Implementation for User Story 2
 
-- [ ] T044 [US2] Implement InterestRateModel abstract base class in src/models/base.py with methods: calibrate(), simulate(), get_parameters(), is_calibrated property
-- [ ] T045 [US2] Implement VasicekModel class in src/models/vasicek.py with calibration via scipy.optimize.minimize (MLE method)
-- [ ] T046 [US2] Implement OLS initial parameter estimation in src/models/vasicek.py for calibration warm start
-- [ ] T047 [US2] Implement get_parameter_interpretations() in src/models/vasicek.py (plain-language explanations for kappa, theta, sigma)
-- [ ] T048 [US2] Implement expected_rate() and rate_variance() analytical formulas in src/models/vasicek.py
-- [ ] T049 [P] [US2] Implement SimulationPath dataclass in src/simulation/paths.py with fields: path_id, model_type, time_grid, rates, random_seed
-- [ ] T050 [P] [US2] Implement SimulationResult dataclass in src/simulation/paths.py with fields: model_type, paths, path_count, time_horizon, time_step, simulation_date, model_parameters
-- [ ] T051 [US2] Implement generate_normal_shocks() function in src/simulation/monte_carlo.py (vectorized NumPy, optional seed)
-- [ ] T052 [US2] Implement apply_vasicek_dynamics() function in src/simulation/monte_carlo.py (vectorized Euler-Maruyama)
-- [ ] T053 [US2] Implement simulate() method in VasicekModel class using monte_carlo module
-- [ ] T054 [P] [US2] Implement plot_simulation_paths() function in src/visualization/simulation_plots.py (paths, mean, percentile bands)
-- [ ] T055 [P] [US2] Implement plot_terminal_distribution() function in src/visualization/simulation_plots.py (histogram/density)
-- [ ] T056 [US2] Add logging to Vasicek calibration and simulation in src/models/vasicek.py
-- [ ] T057 [US2] Create notebook notebooks/02_vasicek_model.ipynb demonstrating calibration, parameter interpretation, simulation, and visualization
+- [X] T044 [US2] Implement InterestRateModel abstract base class in src/models/base.py with methods: calibrate(), simulate(), get_parameters(), is_calibrated property
+- [X] T045 [US2] Implement VasicekModel class in src/models/vasicek.py with calibration via scipy.optimize.minimize (MLE method)
+- [X] T046 [US2] Implement OLS initial parameter estimation in src/models/vasicek.py for calibration warm start
+- [X] T047 [US2] Implement get_parameter_interpretations() in src/models/vasicek.py (plain-language explanations for kappa, theta, sigma)
+- [X] T048 [US2] Implement expected_rate() and rate_variance() analytical formulas in src/models/vasicek.py
+- [X] T049 [P] [US2] Implement SimulationPath dataclass in src/simulation/paths.py with fields: path_id, model_type, time_grid, rates, random_seed
+- [X] T050 [P] [US2] Implement SimulationResult dataclass in src/simulation/paths.py with fields: model_type, paths, path_count, time_horizon, time_step, simulation_date, model_parameters
+- [X] T051 [US2] Implement generate_normal_shocks() function in src/simulation/monte_carlo.py (vectorized NumPy, optional seed)
+- [X] T052 [US2] Implement apply_vasicek_dynamics() function in src/simulation/monte_carlo.py (vectorized Euler-Maruyama)
+- [X] T053 [US2] Implement simulate() method in VasicekModel class using monte_carlo module
+- [X] T054 [P] [US2] Implement plot_simulation_paths() function in src/visualization/simulation_plots.py (paths, mean, percentile bands)
+- [X] T055 [P] [US2] Implement plot_terminal_distribution() function in src/visualization/simulation_plots.py (histogram/density)
+- [X] T056 [US2] Add logging to Vasicek calibration and simulation in src/models/vasicek.py
+- [X] T057 [US2] Create notebook notebooks/02_vasicek_model.ipynb demonstrating calibration, parameter interpretation, simulation, and visualization
 
 **Checkpoint**: User Story 2 complete - researchers can calibrate Vasicek and run simulations
 
