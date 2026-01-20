@@ -217,10 +217,10 @@
 
 **Purpose**: Export capabilities used across multiple user stories
 
-- [ ] T097 [P] Implement export_model() function in src/export/exporter.py (JSON and pickle formats for Vasicek/HJM/PCA)
-- [ ] T098 [P] Implement export_simulation() function in src/export/exporter.py (JSON and CSV formats)
-- [ ] T099 [P] Implement export_figure() function in src/export/exporter.py (PNG, PDF, SVG formats with configurable DPI)
-- [ ] T100 Create output/ directory structure (output/models/, output/simulations/, output/figures/, output/validation/)
+- [X] T097 [P] Implement export_model() function in src/export/exporter.py (JSON and pickle formats for Vasicek/HJM/PCA)
+- [X] T098 [P] Implement export_simulation() function in src/export/exporter.py (JSON and CSV formats)
+- [X] T099 [P] Implement export_figure() function in src/export/exporter.py (PNG, PDF, SVG formats with configurable DPI)
+- [X] T100 Create output/ directory structure (output/models/, output/simulations/, output/figures/, output/validation/)
 
 ---
 

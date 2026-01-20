@@ -6,5 +6,16 @@ This module provides functionality for:
 - Exporting figures (PNG, PDF, SVG)
 """
 
-__all__: list[str] = []
+from src.export.exporter import (
+    export_figure,
+    export_model,
+    export_simulation,
+    load_model_from_pickle,
+)
 
+__all__: list[str] = [
+    "export_figure",
+    "export_model",
+    "export_simulation",
+    "load_model_from_pickle",
+]
