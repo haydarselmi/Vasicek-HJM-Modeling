@@ -6,6 +6,11 @@ This module provides functionality for:
 - Type aliases for rate values, matrices, and date ranges
 """
 
+from src.data.loader import (
+    InterestRateDataset,
+    YieldCurve,
+    load_interest_rate_data,
+)
 from src.data.types import (
     CorrelationMatrix,
     CovarianceMatrix,
@@ -22,8 +27,21 @@ from src.data.types import (
     TimeGrid,
     VasicekParams,
 )
+from src.data.validator import (
+    ValidationReport,
+    handle_missing_values,
+    validate_dataset,
+)
 
 __all__ = [
+    # Data classes
+    "InterestRateDataset",
+    "YieldCurve",
+    "ValidationReport",
+    # Functions
+    "load_interest_rate_data",
+    "validate_dataset",
+    "handle_missing_values",
     # Scalar types
     "RateValue",
     "MaturityTenor",

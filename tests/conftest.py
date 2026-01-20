@@ -6,8 +6,12 @@ model instances, and test utilities used across the test suite.
 
 from datetime import date, timedelta
 
+import matplotlib
 import numpy as np
 import pytest
+
+# Use non-interactive backend for tests (no GUI required)
+matplotlib.use("Agg")
 
 from src.data.types import (
     CorrelationMatrix,

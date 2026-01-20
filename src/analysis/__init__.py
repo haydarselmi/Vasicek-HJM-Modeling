@@ -6,5 +6,15 @@ This module provides functionality for:
 - Interpretation of PCA components (level, slope, curvature)
 """
 
-__all__: list[str] = []
+from src.analysis.statistics import (
+    SummaryStatistics,
+    compute_correlation_matrix,
+    compute_summary_statistics,
+)
+
+__all__ = [
+    "SummaryStatistics",
+    "compute_summary_statistics",
+    "compute_correlation_matrix",
+]
 

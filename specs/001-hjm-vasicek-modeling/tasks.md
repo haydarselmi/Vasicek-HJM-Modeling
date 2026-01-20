@@ -62,27 +62,27 @@
 
 ### Tests for User Story 1
 
-- [ ] T022 [P] [US1] Unit test for data loading in tests/unit/test_loader.py (test CSV parsing, date formats, maturity extraction)
-- [ ] T023 [P] [US1] Unit test for data validation in tests/unit/test_validator.py (test missing values, rate bounds, chronological order)
-- [ ] T024 [P] [US1] Unit test for statistics in tests/unit/test_statistics.py (test mean, std, min, max, correlation matrix)
-- [ ] T025 [US1] Integration test for data pipeline in tests/integration/test_data_pipeline.py (load → validate → statistics → visualize)
+- [X] T022 [P] [US1] Unit test for data loading in tests/unit/test_loader.py (test CSV parsing, date formats, maturity extraction)
+- [X] T023 [P] [US1] Unit test for data validation in tests/unit/test_validator.py (test missing values, rate bounds, chronological order)
+- [X] T024 [P] [US1] Unit test for statistics in tests/unit/test_statistics.py (test mean, std, min, max, correlation matrix)
+- [X] T025 [US1] Integration test for data pipeline in tests/integration/test_data_pipeline.py (load → validate → statistics → visualize)
 
 ### Implementation for User Story 1
 
-- [ ] T026 [P] [US1] Implement InterestRateDataset dataclass in src/data/loader.py with fields: file_path, source_name, observation_dates, maturities, rates, loaded_at
-- [ ] T027 [P] [US1] Implement YieldCurve dataclass in src/data/loader.py with fields: observation_date, maturities, rates
-- [ ] T028 [US1] Implement load_interest_rate_data() function in src/data/loader.py per contract (CSV parsing, date handling, maturity extraction)
-- [ ] T029 [US1] Implement ValidationReport dataclass in src/data/validator.py with fields: warnings, errors, is_valid
-- [ ] T030 [US1] Implement validate_dataset() function in src/data/validator.py (check completeness, chronological order, rate bounds)
-- [ ] T031 [US1] Implement handle_missing_values() function in src/data/validator.py (interpolate, forward_fill, drop strategies)
-- [ ] T032 [P] [US1] Implement SummaryStatistics dataclass in src/analysis/statistics.py with fields: means, stds, mins, maxs, correlations
-- [ ] T033 [US1] Implement compute_summary_statistics() function in src/analysis/statistics.py
-- [ ] T034 [US1] Implement compute_correlation_matrix() function in src/analysis/statistics.py
-- [ ] T035 [P] [US1] Implement plot_yield_curves() function in src/visualization/yield_curves.py (matplotlib, date selection, styling)
-- [ ] T036 [P] [US1] Implement plot_yield_surface() function in src/visualization/yield_curves.py (3D surface plot)
-- [ ] T037 [US1] Add logging to data loading and validation operations in src/data/loader.py and src/data/validator.py
-- [ ] T038 [US1] Create sample data file data/sample_treasury_rates.csv with 1 year of daily data, 7 maturities (3M, 6M, 1Y, 2Y, 5Y, 10Y, 30Y)
-- [ ] T039 [US1] Create notebook notebooks/01_data_exploration.ipynb demonstrating data loading, statistics, and yield curve visualization
+- [X] T026 [P] [US1] Implement InterestRateDataset dataclass in src/data/loader.py with fields: file_path, source_name, observation_dates, maturities, rates, loaded_at
+- [X] T027 [P] [US1] Implement YieldCurve dataclass in src/data/loader.py with fields: observation_date, maturities, rates
+- [X] T028 [US1] Implement load_interest_rate_data() function in src/data/loader.py per contract (CSV parsing, date handling, maturity extraction)
+- [X] T029 [US1] Implement ValidationReport dataclass in src/data/validator.py with fields: warnings, errors, is_valid
+- [X] T030 [US1] Implement validate_dataset() function in src/data/validator.py (check completeness, chronological order, rate bounds)
+- [X] T031 [US1] Implement handle_missing_values() function in src/data/validator.py (interpolate, forward_fill, drop strategies)
+- [X] T032 [P] [US1] Implement SummaryStatistics dataclass in src/analysis/statistics.py with fields: means, stds, mins, maxs, correlations
+- [X] T033 [US1] Implement compute_summary_statistics() function in src/analysis/statistics.py
+- [X] T034 [US1] Implement compute_correlation_matrix() function in src/analysis/statistics.py
+- [X] T035 [P] [US1] Implement plot_yield_curves() function in src/visualization/yield_curves.py (matplotlib, date selection, styling)
+- [X] T036 [P] [US1] Implement plot_yield_surface() function in src/visualization/yield_curves.py (3D surface plot)
+- [X] T037 [US1] Add logging to data loading and validation operations in src/data/loader.py and src/data/validator.py
+- [X] T038 [US1] Create sample data file data/sample_treasury_rates.csv with 1 year of daily data, 7 maturities (3M, 6M, 1Y, 2Y, 5Y, 10Y, 30Y)
+- [X] T039 [US1] Create notebook notebooks/01_data_exploration.ipynb demonstrating data loading, statistics, and yield curve visualization
 
 **Checkpoint**: User Story 1 complete - analysts can load CSV data, view statistics, and visualize yield curves
 
