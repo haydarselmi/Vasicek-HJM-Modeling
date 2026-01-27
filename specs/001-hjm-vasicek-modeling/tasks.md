@@ -276,13 +276,13 @@
 **Purpose**: Final quality improvements and constitution compliance verification
 
 - [ ] T115 [P] Add Google-style docstrings to all public functions and classes (verify with ruff)
-- [ ] T116 [P] Run ruff check and fix all linting issues
-- [ ] T117 [P] Run ty check and fix all type errors
+- [X] T116 [P] Run ruff check and fix all linting issues
+- [X] T117 [P] Run ty check and fix all type errors
 - [ ] T118 Run pytest --cov and verify ≥90% unit test coverage
 - [ ] T119 Verify ≥80% integration test coverage
-- [ ] T120 [P] Add benchmark tests in tests/unit/test_performance.py (10k MC paths <5s, PCA <2s)
-- [ ] T121 Run benchmarks and verify performance meets constitution requirements
-- [ ] T122 [P] Create README.md with project overview, installation, and quickstart
+- [X] T120 [P] Add benchmark tests in tests/unit/test_performance.py (10k MC paths <5s, PCA <2s)
+- [X] T121 Run benchmarks and verify performance meets constitution requirements
+- [X] T122 [P] Create README.md with project overview, installation, and quickstart
 - [ ] T123 Validate quickstart.md by following all steps on fresh environment
 - [ ] T124 Final constitution compliance check (all 7 principles verified in code)
 

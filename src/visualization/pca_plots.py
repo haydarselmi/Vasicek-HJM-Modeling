@@ -7,13 +7,34 @@ and component loading plots.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 if TYPE_CHECKING:
+    from matplotlib.figure import Figure
+
     from src.analysis.pca import PCAResult
+
+
+def _get_figure_from_axes(ax: plt.Axes) -> Figure:
+    """Get figure from axes, with type safety.
+
+    Args:
+        ax: Matplotlib axes.
+
+    Returns:
+        The figure containing the axes.
+
+    Raises:
+        ValueError: If axes has no associated figure.
+    """
+    fig = ax.get_figure()
+    if fig is None:
+        msg = "Cannot get figure from provided axes"
+        raise ValueError(msg)
+    return cast("Figure", fig)
 
 
 def plot_explained_variance(
@@ -35,7 +56,7 @@ def plot_explained_variance(
     if ax is None:
         fig, ax = plt.subplots(figsize=(10, 6))
     else:
-        fig = ax.get_figure()
+        fig = _get_figure_from_axes(ax)
 
     n_components = pca_result.n_components
     x = np.arange(1, n_components + 1)
@@ -137,7 +158,7 @@ def plot_component_loadings(
     if ax is None:
         fig, ax = plt.subplots(figsize=(12, 7))
     else:
-        fig = ax.get_figure()
+        fig = _get_figure_from_axes(ax)
 
     n_components = min(n_components, pca_result.n_components)
     maturities = pca_result.maturities
@@ -313,7 +334,7 @@ def plot_training_loss(
     if ax is None:
         fig, ax = plt.subplots(figsize=(10, 6))
     else:
-        fig = ax.get_figure()
+        fig = _get_figure_from_axes(ax)
 
     epochs = range(1, len(history["train_loss"]) + 1)
 
@@ -415,7 +436,7 @@ def plot_latent_space(
         else:
             fig, ax = plt.subplots(figsize=(10, 8))
     else:
-        fig = ax.get_figure()
+        fig = _get_figure_from_axes(ax)
 
     # Prepare colors
     if labels is None:
@@ -433,16 +454,17 @@ def plot_latent_space(
         scatter_kwargs = {"c": colors, "cmap": "viridis", "alpha": 0.6, "s": 50}
 
     # Create scatter plot
-    if is_3d:
+    if is_3d and len(dims) == 3:
+        dim_z = dims[2]
         scatter = ax.scatter(
             encodings[:, dims[0]],
             encodings[:, dims[1]],
-            encodings[:, dims[2]],
-            **scatter_kwargs,
+            encodings[:, dim_z],
+            **scatter_kwargs,  # type: ignore[arg-type]
         )
         ax.set_xlabel(f"Latent Dim {dims[0] + 1}", fontsize=11)
         ax.set_ylabel(f"Latent Dim {dims[1] + 1}", fontsize=11)
-        ax.set_zlabel(f"Latent Dim {dims[2] + 1}", fontsize=11)
+        ax.set_zlabel(f"Latent Dim {dim_z + 1}", fontsize=11)  # type: ignore[union-attr]
     else:
         scatter = ax.scatter(
             encodings[:, dims[0]],

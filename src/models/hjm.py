@@ -198,7 +198,7 @@ class HJMModel(InterestRateModel):
 
     def calibrate(
         self,
-        data: "InterestRateDataset | npt.NDArray[np.float64] | None" = None,
+        data: InterestRateDataset | npt.NDArray[np.float64] | None = None,
         **kwargs: object,
     ) -> None:
         """Calibrate volatility functions from PCA loadings and eigenvalues.
@@ -288,9 +288,11 @@ class HJMModel(InterestRateModel):
             # Compute drift at maturity T_j
             drift_j = 0.0
 
+            # Get volatility functions (guaranteed non-None after calibration check)
+            vol_funcs = self.volatility_functions
             for i in range(self._n_factors):
                 # σᵢ(T_j)
-                sigma_at_j = self._volatility_functions[i, j]
+                sigma_at_j = vol_funcs[i, j]
 
                 # ∫₀^{T_j} σᵢ(s) ds (using trapezoidal rule)
                 # Integrate from 0 to maturity j
@@ -322,8 +324,10 @@ class HJMModel(InterestRateModel):
         if start_idx >= end_idx:
             return 0.0
 
+        # Get volatility functions (guaranteed non-None when called from compute_drift)
+        vol_funcs = self.volatility_functions
         # Extract volatility values and maturities for integration range
-        vol = self._volatility_functions[factor_idx, start_idx:end_idx + 1]
+        vol = vol_funcs[factor_idx, start_idx:end_idx + 1]
         mat = self._maturities[start_idx:end_idx + 1]
 
         # Trapezoidal integration
@@ -338,7 +342,6 @@ class HJMModel(InterestRateModel):
         n_paths: int,
         time_horizon: float,
         time_step: float,
-        initial_curve: npt.NDArray[np.float64] | None = None,
         random_seed: int | None = None,
         **kwargs: object,
     ) -> SimulationResult:
@@ -351,10 +354,10 @@ class HJMModel(InterestRateModel):
             n_paths: Number of simulation paths to generate.
             time_horizon: Simulation horizon in years.
             time_step: Time step size in years (e.g., 1/252 for daily).
-            initial_curve: Initial forward rate curve. If None, use last
-                observed curve from PCA analysis (if available).
             random_seed: Optional seed for reproducibility.
-            **kwargs: Additional arguments (ignored).
+            **kwargs: Additional arguments.
+                initial_curve: Initial forward rate curve. If None, use last
+                    observed curve from PCA analysis (if available).
 
         Returns:
             SimulationResult containing all simulated forward curve paths.
@@ -367,6 +370,9 @@ class HJMModel(InterestRateModel):
             raise ModelNotCalibratedError(model_type="HJM")
 
         n_maturities = len(self._maturities)
+
+        # Extract initial_curve from kwargs
+        initial_curve: npt.NDArray[np.float64] | None = kwargs.get("initial_curve")
 
         # Validate or create initial curve
         if initial_curve is None:
@@ -505,9 +511,9 @@ class HJMModel(InterestRateModel):
             # Reconstruct contribution from this factor
             factor_contribution = np.outer(factor_scores, loading).mean(axis=0)
 
-            # Variance explained by this factor
-            factor_variance = self._factor_variances[i]
-            total_factor_variance = np.sum(self._factor_variances)
+            # Variance explained by this factor (use property which checks for None)
+            factor_variance = self.factor_variances[i]
+            total_factor_variance = np.sum(self.factor_variances)
 
             percentage = 100.0 * factor_variance / total_factor_variance
 
@@ -547,9 +553,10 @@ class HJMModel(InterestRateModel):
             "n_factors": float(self._n_factors),
         }
 
-        # Add factor variances
+        # Add factor variances (use property which checks for None)
+        factor_vars = self.factor_variances
         for i in range(self._n_factors):
-            params[f"factor_{i}_variance"] = float(self._factor_variances[i])
+            params[f"factor_{i}_variance"] = float(factor_vars[i])
 
         # Add total variance explained
         total_var_explained = float(
@@ -587,9 +594,10 @@ class HJMModel(InterestRateModel):
                 else f"PC{i + 1}"
             )
             var_ratio = self._pca_result.explained_variance_ratio[i] * 100
+            factor_vars = self.factor_variances
             interpretations[f"factor_{i}"] = (
                 f"{label}: Explains {var_ratio:.1f}% of yield curve variance. "
-                f"Daily volatility magnitude: {np.sqrt(self._factor_variances[i]) * 100:.4f}%."
+                f"Daily volatility magnitude: {np.sqrt(factor_vars[i]) * 100:.4f}%."
             )
 
         total_explained = (

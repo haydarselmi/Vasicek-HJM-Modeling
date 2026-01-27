@@ -85,7 +85,7 @@ def _ndarray_to_list(obj: Any) -> Any:
     return obj
 
 
-def _get_model_type(model: "InterestRateModel") -> str:
+def _get_model_type(model: InterestRateModel) -> str:
     """Get the model type string from a model instance.
 
     Args:
@@ -104,7 +104,7 @@ def _get_model_type(model: "InterestRateModel") -> str:
     return model.__class__.__name__.lower()
 
 
-def _serialize_model_to_dict(model: "InterestRateModel") -> dict[str, Any]:
+def _serialize_model_to_dict(model: InterestRateModel) -> dict[str, Any]:
     """Serialize a model to a dictionary for JSON export.
 
     Args:
@@ -152,7 +152,7 @@ def _serialize_model_to_dict(model: "InterestRateModel") -> dict[str, Any]:
     return result
 
 
-def _serialize_pca_to_dict(pca_result: "PCAResult") -> dict[str, Any]:
+def _serialize_pca_to_dict(pca_result: PCAResult) -> dict[str, Any]:
     """Serialize a PCAResult to a dictionary for JSON export.
 
     Args:
@@ -177,7 +177,7 @@ def _serialize_pca_to_dict(pca_result: "PCAResult") -> dict[str, Any]:
     }
 
 
-def _serialize_simulation_to_dict(result: "SimulationResult") -> dict[str, Any]:
+def _serialize_simulation_to_dict(result: SimulationResult) -> dict[str, Any]:
     """Serialize a SimulationResult to a dictionary for JSON export.
 
     Args:
@@ -234,7 +234,7 @@ def _serialize_simulation_to_dict(result: "SimulationResult") -> dict[str, Any]:
 
 
 def export_model(
-    model: "InterestRateModel | PCAResult",
+    model: InterestRateModel | PCAResult,
     output_path: Path,
     format: ModelExportFormat = "json",
 ) -> None:
@@ -271,8 +271,12 @@ def export_model(
         if format == "json":
             # Serialize to JSON
             if is_pca:
+                # Type narrowing: we know model is PCAResult here
+                assert isinstance(model, PCAResult)
                 data = _serialize_pca_to_dict(model)
             else:
+                # Type narrowing: we know model is InterestRateModel here
+                assert isinstance(model, InterestRateModel)
                 data = _serialize_model_to_dict(model)
 
             with output_path.open("w", encoding="utf-8") as f:
@@ -311,7 +315,7 @@ def export_model(
 
 
 def export_simulation(
-    result: "SimulationResult",
+    result: SimulationResult,
     output_path: Path,
     format: SimulationExportFormat = "csv",
 ) -> None:
@@ -371,7 +375,7 @@ def export_simulation(
         ) from e
 
 
-def _export_simulation_csv(result: "SimulationResult", output_path: Path) -> None:
+def _export_simulation_csv(result: SimulationResult, output_path: Path) -> None:
     """Export simulation result to CSV format.
 
     For Vasicek: Creates table with [time, path_0, path_1, ..., mean, std].
@@ -465,7 +469,7 @@ def _write_hjm_csv(
 
 
 def export_figure(
-    figure: "plt.Figure",
+    figure: plt.Figure,
     output_path: Path,
     format: FigureExportFormat = "png",
     dpi: int = 300,
@@ -543,7 +547,7 @@ def export_figure(
 
 def load_model_from_pickle(
     input_path: Path,
-) -> "InterestRateModel | PCAResult":
+) -> InterestRateModel | PCAResult:
     """Load a model or PCA result from a pickle file.
 
     Args:

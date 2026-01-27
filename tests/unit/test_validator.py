@@ -140,7 +140,8 @@ class TestValidateDataset:
         with pytest.raises(DataValidationError) as exc_info:
             validate_dataset(dataset)
 
-        assert "chronological" in str(exc_info.value).lower() or "order" in str(exc_info.value).lower()
+        error_msg = str(exc_info.value).lower()
+        assert "chronological" in error_msg or "order" in error_msg
 
     def test_validate_strict_mode_raises_on_warnings(
         self,

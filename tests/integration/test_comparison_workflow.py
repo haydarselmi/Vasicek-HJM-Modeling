@@ -29,7 +29,6 @@ from src.visualization.simulation_plots import (
     plot_model_comparison,
 )
 
-
 # =============================================================================
 # Fixtures
 # =============================================================================
@@ -266,7 +265,7 @@ class TestModelComparison:
         assert "hit_ratio" in comparison.best_model_by_metric
 
         # Best models should be one of the compared models
-        for metric, best in comparison.best_model_by_metric.items():
+        for _metric, best in comparison.best_model_by_metric.items():
             assert best in comparison.models
 
     def test_comparison_metrics_table(
@@ -419,7 +418,7 @@ class TestEndToEndWorkflow:
         # Step 5: Get recommendations
         short_rate_rec = get_model_recommendation(comparison, "short_rate")
         yield_curve_rec = get_model_recommendation(comparison, "yield_curve")
-        derivatives_rec = get_model_recommendation(comparison, "derivatives")
+        get_model_recommendation(comparison, "derivatives")
 
         # Step 6: Validate outputs
         assert "Vasicek" in short_rate_rec or "HJM" in short_rate_rec

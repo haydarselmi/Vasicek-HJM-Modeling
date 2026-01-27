@@ -151,8 +151,8 @@ class ComparisonResult:
 
 
 def compare_models(
-    models: list["InterestRateModel"],
-    validation_data: "InterestRateDataset",
+    models: list[InterestRateModel],
+    validation_data: InterestRateDataset,
     model_names: list[str] | None = None,
     prediction_horizon: int = 1,
 ) -> ComparisonResult:

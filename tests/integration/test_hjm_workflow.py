@@ -19,7 +19,6 @@ from src.visualization.simulation_plots import (
     plot_volatility_functions,
 )
 
-
 # =============================================================================
 # T073: Integration test for HJM workflow
 # =============================================================================

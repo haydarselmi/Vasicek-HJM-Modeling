@@ -6,13 +6,13 @@ no-arbitrage drift computation, and forward curve simulation.
 
 import numpy as np
 import pytest
-from hypothesis import given, settings, strategies as st, HealthCheck
+from hypothesis import HealthCheck, given, settings
+from hypothesis import strategies as st
 
 from src.analysis.pca import PCAResult
 from src.models.hjm import FactorContribution, HJMModel
 from src.simulation.paths import SimulationResult
-from src.utils.exceptions import CalibrationError, ModelNotCalibratedError
-
+from src.utils.exceptions import ModelNotCalibratedError
 
 # =============================================================================
 # Fixtures for HJM Tests
@@ -612,7 +612,7 @@ class TestHJMNoArbitrageProperties:
 
         # The empirical drift should be close to theoretical drift
         # (within Monte Carlo error, which decreases with sqrt(n_paths * n_steps))
-        mc_error = 0.001 / np.sqrt(1000 * n_steps)  # Approximate MC standard error
+        0.001 / np.sqrt(1000 * n_steps)  # Approximate MC standard error
 
         np.testing.assert_array_almost_equal(
             empirical_drift_per_step,

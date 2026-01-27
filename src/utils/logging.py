@@ -8,6 +8,7 @@ programmatic log analysis.
 import json
 import logging
 import sys
+from collections.abc import MutableMapping
 from datetime import UTC, datetime
 from typing import Literal
 
@@ -67,8 +68,8 @@ class ContextAdapter(logging.LoggerAdapter):
     """
 
     def process(
-        self, msg: str, kwargs: dict
-    ) -> tuple[str, dict]:
+        self, msg: object, kwargs: MutableMapping[str, object]
+    ) -> tuple[object, MutableMapping[str, object]]:
         """Process the log message and add extra context.
 
         Args:
@@ -78,7 +79,8 @@ class ContextAdapter(logging.LoggerAdapter):
         Returns:
             Tuple of processed message and updated kwargs.
         """
-        extra = kwargs.get("extra", {})
+        extra_val = kwargs.get("extra", {})
+        extra: dict[str, object] = dict(extra_val) if isinstance(extra_val, dict) else {}
         if self.extra:
             extra.update(self.extra)
         kwargs["extra"] = extra

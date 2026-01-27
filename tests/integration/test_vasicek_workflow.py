@@ -9,7 +9,6 @@ from pathlib import Path
 
 import matplotlib
 import numpy as np
-import pytest
 
 matplotlib.use("Agg")
 
@@ -20,7 +19,6 @@ from src.visualization.simulation_plots import (
     plot_simulation_paths,
     plot_terminal_distribution,
 )
-
 
 # =============================================================================
 # T043: Integration test for Vasicek workflow

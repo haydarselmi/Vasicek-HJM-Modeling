@@ -4,8 +4,11 @@ This module provides functions for computing summary statistics and
 correlation matrices for interest rate time series data.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 import numpy as np
 import numpy.typing as npt
@@ -13,6 +16,9 @@ import numpy.typing as npt
 from src.data.loader import InterestRateDataset
 from src.data.types import CorrelationMatrix, MaturityVector, RateVector
 from src.utils.logging import get_logger
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 logger = get_logger("analysis.statistics")
 

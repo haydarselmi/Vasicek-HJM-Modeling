@@ -267,8 +267,8 @@ class ValidationResult:
 
 
 def backtest_model(
-    model: "InterestRateModel",
-    validation_data: "InterestRateDataset",
+    model: InterestRateModel,
+    validation_data: InterestRateDataset,
     prediction_horizon: int = 1,
 ) -> ValidationResult:
     """Backtest a calibrated model against held-out data.
@@ -361,8 +361,8 @@ def backtest_model(
 
 
 def _backtest_vasicek(
-    model: "VasicekModel",
-    validation_data: "InterestRateDataset",
+    model: VasicekModel,
+    validation_data: InterestRateDataset,
     prediction_horizon: int,
 ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """Perform backtesting for Vasicek model.
@@ -406,8 +406,8 @@ def _backtest_vasicek(
 
 
 def _backtest_hjm(
-    model: "HJMModel",
-    validation_data: "InterestRateDataset",
+    model: HJMModel,
+    validation_data: InterestRateDataset,
     prediction_horizon: int,
 ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """Perform backtesting for HJM model.

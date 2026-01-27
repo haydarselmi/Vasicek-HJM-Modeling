@@ -9,7 +9,6 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-
 # Skip all tests if torch is not installed
 torch = pytest.importorskip("torch")
 
@@ -263,7 +262,8 @@ class TestTrainAutoencoder:
             validation_data=val_data,
         )
 
-        assert "val_loss" in history, "History should contain val_loss when validation data provided"
+        msg = "History should contain val_loss when validation data provided"
+        assert "val_loss" in history, msg
         assert len(history["val_loss"]) == 5
 
     def test_train_autoencoder_reproducibility(self) -> None:
@@ -325,10 +325,11 @@ class TestCompareDimensionalityMethods:
             n_epochs=5,
         )
 
-        assert "pca_reconstruction_error" in result
-        assert "autoencoder_reconstruction_error" in result
-        assert "pca_explained_variance" in result
-        assert "autoencoder" in result  # The trained model
+        # Check that result is a ComparisonResult dataclass with expected attributes
+        assert hasattr(result, "pca_reconstruction_error")
+        assert hasattr(result, "autoencoder_reconstruction_error")
+        assert hasattr(result, "pca_explained_variance")
+        assert hasattr(result, "autoencoder")  # The trained model
 
     def test_compare_pca_vs_autoencoder_errors(self) -> None:
         """Test that both methods produce finite reconstruction errors."""
@@ -353,10 +354,10 @@ class TestCompareDimensionalityMethods:
 
         result = compare_dimensionality_methods(dataset, n_components=3, n_epochs=10)
 
-        assert np.isfinite(result["pca_reconstruction_error"])
-        assert np.isfinite(result["autoencoder_reconstruction_error"])
-        assert result["pca_reconstruction_error"] >= 0
-        assert result["autoencoder_reconstruction_error"] >= 0
+        assert np.isfinite(result.pca_reconstruction_error)
+        assert np.isfinite(result.autoencoder_reconstruction_error)
+        assert result.pca_reconstruction_error >= 0
+        assert result.autoencoder_reconstruction_error >= 0
 
 
 class TestEncodeDecode:

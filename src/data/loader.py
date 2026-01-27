@@ -120,7 +120,7 @@ class InterestRateDataset:
         self,
         start_date: date | None = None,
         end_date: date | None = None,
-    ) -> "InterestRateDataset":
+    ) -> InterestRateDataset:
         """Filter the dataset to a date range for train/test splitting.
 
         Creates a new dataset containing only observations within the

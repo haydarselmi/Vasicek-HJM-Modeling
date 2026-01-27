@@ -463,7 +463,6 @@ class VasicekModel(InterestRateModel):
         n_paths: int,
         time_horizon: float,
         time_step: float,
-        initial_rate: float | None = None,
         random_seed: int | None = None,
         **kwargs: object,
     ) -> SimulationResult:
@@ -475,9 +474,9 @@ class VasicekModel(InterestRateModel):
             n_paths: Number of simulation paths to generate.
             time_horizon: Simulation horizon in years.
             time_step: Time step size in years (e.g., 1/252 for daily).
-            initial_rate: Starting rate. If None, uses theta.
             random_seed: Optional seed for reproducibility.
-            **kwargs: Additional keyword arguments (ignored).
+            **kwargs: Additional keyword arguments.
+                initial_rate: Starting rate. If None, uses theta.
 
         Returns:
             SimulationResult containing all simulated paths.
@@ -487,6 +486,9 @@ class VasicekModel(InterestRateModel):
         """
         if not self.is_calibrated:
             raise ModelNotCalibratedError(model_type="Vasicek")
+
+        # Extract initial_rate from kwargs
+        initial_rate: float | None = kwargs.get("initial_rate")  # type: ignore[assignment]
 
         logger.info(
             "Simulating %d paths over %.2f years with dt=%.6f",

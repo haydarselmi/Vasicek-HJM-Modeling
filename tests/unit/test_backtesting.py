@@ -4,7 +4,7 @@ This module tests error metric calculations (MAE, RMSE, MAPE, hit ratio)
 and the backtesting pipeline for model validation.
 """
 
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 import numpy as np
 import numpy.typing as npt
@@ -20,7 +20,6 @@ from src.validation.backtesting import (
     compute_mape,
     compute_rmse,
 )
-
 
 # =============================================================================
 # Test Fixtures
@@ -164,7 +163,7 @@ class TestMAPE:
         predicted = np.array([0.03, 0.035, 0.032])
         actual = np.array([0.031, -0.001, 0.030])  # Crosses zero
 
-        mape = compute_mape(predicted, actual)
+        compute_mape(predicted, actual)
         # MAPE with negative actuals can be computed but is unusual
         # Our implementation may handle this differently
         # The key is consistency

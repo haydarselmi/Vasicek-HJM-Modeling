@@ -5,13 +5,11 @@ and simulation reproducibility.
 """
 
 import numpy as np
-import pytest
 
 from src.simulation.monte_carlo import (
     apply_vasicek_dynamics,
     generate_normal_shocks,
 )
-
 
 # =============================================================================
 # T041: Unit tests for Monte Carlo engine

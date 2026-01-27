@@ -302,7 +302,7 @@ def _compute_kurtosis(data: npt.NDArray[np.float64]) -> float:
 
 
 def plot_volatility_functions(
-    model: "HJMModel",
+    model: HJMModel,
     ax: plt.Axes | None = None,
     title: str | None = None,
 ) -> plt.Figure:
@@ -373,7 +373,7 @@ def plot_volatility_functions(
     # Formatting
     ax.set_xlabel("Maturity (years)")
     ax.set_ylabel("Volatility (% per √day)")
-    
+
     if title is None:
         title = f"HJM Volatility Functions ({n_factors} Factors)"
     ax.set_title(title)
@@ -506,7 +506,7 @@ def plot_forward_curve_evolution(
 
 
 def plot_model_comparison(
-    comparison_result: "ComparisonResult",
+    comparison_result: ComparisonResult,
     ax: plt.Axes | None = None,
     title: str | None = None,
     metric: str = "all",
@@ -540,7 +540,6 @@ def plot_model_comparison(
         raise TypeError("Expected ComparisonResult instance")
 
     models = comparison_result.models
-    n_models = len(models)
 
     if metric == "all":
         # Create subplot with 3 metrics
@@ -621,10 +620,7 @@ def plot_model_comparison(
         bars = ax.bar(models, values, color=color, edgecolor="black")
 
         # Highlight best model
-        if metric == "hit_ratio":
-            best_idx = np.argmax(values)
-        else:
-            best_idx = np.argmin(values)
+        best_idx = np.argmax(values) if metric == "hit_ratio" else np.argmin(values)
 
         bars[best_idx].set_color("gold")
         bars[best_idx].set_edgecolor("black")
@@ -641,7 +637,7 @@ def plot_model_comparison(
 
 
 def plot_backtest_results(
-    validation_result: "ValidationResult",
+    validation_result: ValidationResult,
     show_error_bands: bool = True,
     n_std: float = 1.0,
     ax: plt.Axes | None = None,

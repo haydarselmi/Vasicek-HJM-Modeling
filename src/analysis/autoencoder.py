@@ -11,9 +11,10 @@ or pip install hjm-vasicek-modeling[autoencoder]).
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import numpy.typing as npt
@@ -70,7 +71,7 @@ class AutoencoderResult:
         training_date: When training was performed.
     """
 
-    model: "YieldCurveAutoencoder"
+    model: YieldCurveAutoencoder
     latent_dim: int
     train_loss_history: list[float]
     val_loss_history: list[float] = field(default_factory=list)
@@ -99,7 +100,7 @@ class ComparisonResult:
     pca_explained_variance: float
     n_components: int
     pca_result: PCAResult
-    autoencoder: "YieldCurveAutoencoder"
+    autoencoder: YieldCurveAutoencoder
     autoencoder_history: dict[str, list[float]]
 
 
@@ -245,12 +246,42 @@ if TORCH_AVAILABLE:
 
 else:
     # Placeholder class when torch is not available
-    class YieldCurveAutoencoder:  # type: ignore[no-redef]
+    class YieldCurveAutoencoder:  # noqa: F811
         """Placeholder for YieldCurveAutoencoder when PyTorch is not installed."""
 
         def __init__(self, *args: object, **kwargs: object) -> None:
             """Raise error on instantiation."""
             _check_torch_available()
+
+        def parameters(self) -> Iterator[Any]:
+            """Placeholder method."""
+            _check_torch_available()
+            return iter([])
+
+        def train(self, mode: bool = True) -> YieldCurveAutoencoder:
+            """Placeholder method."""
+            _check_torch_available()
+            return self
+
+        def eval(self) -> YieldCurveAutoencoder:
+            """Placeholder method."""
+            _check_torch_available()
+            return self
+
+        def __call__(self, x: object) -> object:
+            """Placeholder method."""
+            _check_torch_available()
+            return x
+
+        def reconstruct_numpy(self, data: npt.NDArray[np.float32]) -> npt.NDArray[np.float32]:
+            """Placeholder method."""
+            _check_torch_available()
+            return data
+
+        def encode_numpy(self, data: npt.NDArray[np.float32]) -> npt.NDArray[np.float32]:
+            """Placeholder method."""
+            _check_torch_available()
+            return data
 
 
 # =============================================================================
@@ -259,7 +290,7 @@ else:
 
 
 def train_autoencoder(
-    model: "YieldCurveAutoencoder",
+    model: YieldCurveAutoencoder,
     data: npt.NDArray[np.float32],
     n_epochs: int = 100,
     batch_size: int = 32,
@@ -378,7 +409,7 @@ def train_autoencoder(
 
 
 def compare_dimensionality_methods(
-    dataset: "InterestRateDataset",
+    dataset: InterestRateDataset,
     n_components: int = 3,
     n_epochs: int = 100,
     batch_size: int = 32,
@@ -410,7 +441,7 @@ def compare_dimensionality_methods(
 
     # Get data matrix
     if use_changes:
-        from src.analysis.pca import compute_yield_curve_changes, _get_changes_matrix
+        from src.analysis.pca import _get_changes_matrix, compute_yield_curve_changes
 
         changes = compute_yield_curve_changes(dataset)
         data = _get_changes_matrix(changes)
@@ -455,7 +486,8 @@ def compare_dimensionality_methods(
     logger.info("Autoencoder reconstruction MSE: %.6f", ae_mse)
 
     # Total explained variance for PCA
-    total_pca_variance = float(pca_result.cumulative_variance[-1]) if len(pca_result.cumulative_variance) > 0 else 0.0
+    has_variance = len(pca_result.cumulative_variance) > 0
+    total_pca_variance = float(pca_result.cumulative_variance[-1]) if has_variance else 0.0
 
     return ComparisonResult(
         pca_reconstruction_error=float(pca_mse),
@@ -469,7 +501,7 @@ def compare_dimensionality_methods(
 
 
 def get_latent_encodings(
-    model: "YieldCurveAutoencoder",
+    model: YieldCurveAutoencoder,
     data: npt.NDArray[np.float64],
     normalize: bool = True,
 ) -> npt.NDArray[np.float32]:

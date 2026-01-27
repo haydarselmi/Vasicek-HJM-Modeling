@@ -6,12 +6,11 @@ and analytical formulas for expected rate and variance.
 
 import numpy as np
 import pytest
-from hypothesis import given, settings, strategies as st
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 from src.models.vasicek import VasicekModel, _estimate_ols_params
-from src.simulation.paths import SimulationResult
 from src.utils.exceptions import CalibrationError, ModelNotCalibratedError
-
 
 # =============================================================================
 # T040: Unit tests for Vasicek calibration
@@ -388,7 +387,8 @@ class TestOLSParameterEstimation:
 
         for t in range(1, n_obs):
             dW = rng.standard_normal() * np.sqrt(dt)
-            rates[t] = rates[t - 1] + true_kappa * (true_theta - rates[t - 1]) * dt + true_sigma * dW
+            drift = true_kappa * (true_theta - rates[t - 1]) * dt
+            rates[t] = rates[t - 1] + drift + true_sigma * dW
 
         kappa, theta, sigma = _estimate_ols_params(rates, dt=dt)
 

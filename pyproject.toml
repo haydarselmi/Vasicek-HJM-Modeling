@@ -101,9 +101,11 @@ docstring-code-format = true
 # =============================================================================
 # Ty Type Checker Configuration (T004)
 # =============================================================================
-[tool.ty]
+[tool.ty.environment]
 python-version = "3.14"
-src = ["src"]
+
+[tool.ty.src]
+include = ["src"]
 
 # =============================================================================
 # Pytest Configuration (T005)
@@ -163,3 +165,8 @@ directory = "htmlcov"
 deadline = 5000
 max_examples = 100
 verbosity = "normal"
+
+[dependency-groups]
+dev = [
+    "ty>=0.0.14",
+]
